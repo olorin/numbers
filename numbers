@@ -1,11 +1,8 @@
 #! /usr/bin/env python
 
 import sys
-import math
 import numpy
 from optparse import OptionParser
-import matplotlib.pyplot as plt
-import IPython
 
 def get_summary(a):
     d = {
@@ -31,6 +28,13 @@ def main():
 
     opts, args = op.parse_args()
 
+    # import optional libraries
+    if opts.histogram:
+        import math
+        import matplotlib.pyplot as plt
+    if opts.ipython:
+        import IPython
+
     numbers = []
     if not args:
         fin = sys.stdin
@@ -45,13 +49,13 @@ def main():
             line = None
 
     n_numbers = len(numbers)
-    magnitude = math.log(n_numbers, 2)
     num_array = numpy.array(numbers)
     num_summary = get_summary(num_array)
     out = [ "%s: %f" % (k,num_summary[k]) for k in num_summary]
     out.sort()
     print('\n'.join(out))
     if opts.histogram:
+        magnitude = math.log(n_numbers, 2)
         n, bins, patches = plt.hist(num_array, magnitude)
         plt.show()
     if opts.ipython:
